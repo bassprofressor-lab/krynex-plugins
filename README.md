@@ -43,8 +43,10 @@ so no event runs twice.
 ## agentguard
 
 Asks your AgentGuard service before every shell command, file write and web fetch the agent
-makes, and does what it answers. AgentGuard is a separate service (self-hosted, or run for you by
-Krynex Labs inside your network); the plugin is the client in Claude Code.
+makes, and does what it answers. **AgentGuard is a commercial service by Krynex Labs**, run for
+you or set up inside your network under contract. This plugin is only the client in Claude Code:
+it is free and open, and it does nothing without an AgentGuard instance and an agent key.
+Access: [krynexlabs.de/services/agentguard](https://www.krynexlabs.de/services/agentguard/).
 
 When you enable it, Claude Code asks for the service address, the agent key (kept in your
 system's secure credential store), the tenant, the agent id, and the mode:
@@ -63,7 +65,9 @@ has a `[governance]` address, the call is checked twice; use one of the two.
 
 ## Licences
 
-The plugins (manifests, skills, hooks, starters) are Apache-2.0. The Cyberbrain binary it
+The plugins (manifests, skills, hooks, starters) are Apache-2.0. Cyberbrain is free on a single
+machine; the team collector (hub) needs a licence. AgentGuard, the service, is not part of this
+repository and not open source. The Cyberbrain binary it
 downloads is [FSL-1.1-ALv2](https://github.com/bassprofressor-lab/cyberbrain/blob/main/LICENSE.md):
 free to use, including commercially, except to offer a competing product; each release
 becomes Apache-2.0 two years after it ships.

@@ -1,8 +1,8 @@
 {
   "name": "agentguard",
   "displayName": "AgentGuard",
-  "description": "Asks your AgentGuard service before every shell command, file write and web fetch of the agent. Shadow mode records and never stops anything; enforce mode carries out deny and ask, and asks a person whenever the service cannot answer.",
-  "version": "0.1.0",
+  "description": "Client for AgentGuard, the commercial governance service by Krynex Labs: asks it before every shell command, file write and web fetch. Shadow mode records; enforce mode carries out deny and ask and asks a person when the service cannot answer. Requires an AgentGuard instance and key.",
+  "version": "0.1.1",
   "author": {
     "name": "Krynex Labs",
     "email": "info@krynexlabs.de"
