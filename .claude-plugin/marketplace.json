@@ -12,7 +12,7 @@
     {
       "name": "cyberbrain",
       "description": "Local, cited project memory for coding agents: notes as Markdown, trust rings, hybrid search without network, GDPR erasure and an audit chain.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "source": "./plugins/cyberbrain",
       "category": "productivity",
       "homepage": "https://www.krynexlabs.de/cyberbrain/",
