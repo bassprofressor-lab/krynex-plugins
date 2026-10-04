@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "cyberbrain": {
+      "command": "${CLAUDE_PLUGIN_ROOT}/bin/cyberbrain",
+      "args": [
+        "mcp",
+        "--client",
+        "claude-code-plugin"
+      ]
+    }
+  }
+}

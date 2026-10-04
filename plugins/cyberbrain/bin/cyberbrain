@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# Cyberbrain-Starter für das Claude-Code-Plugin (04.10.2026).
+#
+# Claude Code legt dieses Verzeichnis (bin/) auf den PATH und ruft es aus den Hooks und dem
+# MCP-Eintrag auf. Beim ersten Aufruf lädt es genau das Release, das in VERSION steht, prüft
+# es gegen die SHA256SUMS desselben Releases und legt es in ${CLAUDE_PLUGIN_DATA} ab, das
+# Plugin-Updates übersteht. Danach wird nur noch ausgeführt, nichts mehr geladen.
+#
+# Was es absichtlich NICHT tut:
+#  - kein „latest“: ein Plugin-Update ändert VERSION, sonst nichts lädt sich still neu
+#  - nichts ausführen, dessen Prüfsumme nicht stimmt; die Datei wird gelöscht
+#  - als Hook nie mit einem Fehlercode enden: ein Gedächtnis, das nicht startet, darf die
+#    Sitzung nicht anhalten. Der Mensch bekommt eine Zeile, der Agent arbeitet weiter.
+#
+# CYBERBRAIN_BIN=/pfad/zum/binary übersteuert den Download (Entwicklung, eigene Builds).
+set -u
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+version="$(tr -d ' \r\n' < "$here/../VERSION")"
+repo="bassprofressor-lab/cyberbrain"
+
+is_hook=0
+[ "${1:-}" = "hook" ] && is_hook=1
+
+fail() {
+  # $1: Meldung. Als Hook: SessionStart zeigt sie dem Menschen, alle anderen schweigen auf
+  # stdout und enden mit 0. Sonst: Fehler auf stderr, Code 1.
+  if [ "$is_hook" = 1 ]; then
+    echo "cyberbrain plugin: $1" >&2
+    if [ "${2:-}" = "session-start" ]; then
+      msg=$(printf '%s' "cyberbrain plugin: $1" | sed 's/\\/\\\\/g; s/"/\\"/g')
+      printf '{"systemMessage":"%s"}\n' "$msg"
+    fi
+    exit 0
+  fi
+  echo "cyberbrain plugin: $1" >&2
+  exit 1
+}
+
+if [ -n "${CYBERBRAIN_BIN:-}" ]; then
+  exec "$CYBERBRAIN_BIN" "$@"
+fi
+
+case "$(uname -s)-$(uname -m)" in
+  Linux-x86_64)                      asset="cyberbrain-linux-x86_64" ;;
+  Darwin-arm64)                      asset="cyberbrain-macos-aarch64" ;;
+  MINGW*-x86_64|MSYS*-x86_64|CYGWIN*-x86_64) asset="cyberbrain-windows-x86_64.exe" ;;
+  *) fail "no Cyberbrain build for $(uname -s) $(uname -m); see https://github.com/$repo/releases" "${2:-}" ;;
+esac
+
+data="${CLAUDE_PLUGIN_DATA:-${XDG_CACHE_HOME:-$HOME/.cache}/cyberbrain-plugin}"
+dir="$data/v$version"
+bin="$dir/$asset"
+
+if [ ! -x "$bin" ]; then
+  mkdir -p "$dir" || fail "cannot create $dir" "${2:-}"
+  base="https://github.com/$repo/releases/download/v$version"
+  tmp="$(mktemp "$dir/.dl.XXXXXX")" || fail "cannot write to $dir" "${2:-}"
+  sums="$(mktemp "$dir/.sums.XXXXXX")" || fail "cannot write to $dir" "${2:-}"
+  trap 'rm -f "$tmp" "$sums"' EXIT
+  curl -fsSL --retry 2 --max-time 120 -o "$sums" "$base/SHA256SUMS" \
+    || fail "could not download SHA256SUMS for v$version (offline?)" "${2:-}"
+  curl -fsSL --retry 2 --max-time 300 -o "$tmp" "$base/$asset" \
+    || fail "could not download $asset v$version (offline, or no build for this platform yet)" "${2:-}"
+  # Zeilen sehen so aus: "<hash>  name" oder "<hash> *name" (Windows, Binärmodus).
+  want="$(awk -v n="$asset" '{f=$2; sub(/^\*/,"",f); if (f==n) print $1}' "$sums")"
+  [ -n "$want" ] || fail "$asset is not listed in SHA256SUMS of v$version" "${2:-}"
+  if command -v sha256sum >/dev/null 2>&1; then got="$(sha256sum "$tmp" | awk '{print $1}')"
+  else got="$(shasum -a 256 "$tmp" | awk '{print $1}')"; fi
+  if [ "$got" != "$want" ]; then
+    rm -f "$tmp"
+    fail "checksum mismatch for $asset v$version (expected $want, got $got); nothing was run" "${2:-}"
+  fi
+  chmod +x "$tmp"
+  mv -f "$tmp" "$bin" || fail "cannot place the binary in $dir" "${2:-}"
+  rm -f "$sums"
+  trap - EXIT
+fi
+
+exec "$bin" "$@"

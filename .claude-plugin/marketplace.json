@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "krynex-plugins",
+  "metadata": {
+    "description": "Plugins von Krynex Labs: Cyberbrain, ein lokales, zitierendes Projekt-Gedächtnis für Coding-Agenten."
+  },
+  "owner": {
+    "name": "Krynex Labs",
+    "email": "info@krynexlabs.de"
+  },
+  "plugins": [
+    {
+      "name": "cyberbrain",
+      "description": "Local, cited project memory for coding agents: notes as Markdown, trust rings, hybrid search without network, GDPR erasure and an audit chain.",
+      "version": "0.1.0",
+      "source": "./plugins/cyberbrain",
+      "category": "productivity",
+      "homepage": "https://www.krynexlabs.de/cyberbrain/",
+      "tags": ["memory", "context", "local-first", "gdpr", "mcp"]
+    }
+  ]
+}

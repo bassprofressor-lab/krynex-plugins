@@ -1,0 +1,18 @@
+name: validate
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: npm install -g @anthropic-ai/claude-code
+      # --strict: warnings fail too. The directory submission requires a clean strict run.
+      - run: claude plugin validate --strict .
+      - run: claude plugin validate --strict plugins/cyberbrain
+      - name: the starter is valid bash
+        run: bash -n plugins/cyberbrain/bin/cyberbrain

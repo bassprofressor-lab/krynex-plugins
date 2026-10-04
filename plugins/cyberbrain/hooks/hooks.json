@@ -1,0 +1,67 @@
+{
+  "description": "Cyberbrain: the same six lifecycle hooks `cyberbrain install` writes, run through the plugin's starter.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/bin/cyberbrain\" hook session-start"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/bin/cyberbrain\" hook user-prompt-submit"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/bin/cyberbrain\" hook pre-tool-use"
+          }
+        ],
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash|WebFetch"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/bin/cyberbrain\" hook post-tool-use"
+          }
+        ],
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/bin/cyberbrain\" hook stop"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/bin/cyberbrain\" hook pre-compact"
+          }
+        ]
+      }
+    ]
+  }
+}
