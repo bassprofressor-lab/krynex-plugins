@@ -1,0 +1,17 @@
+{
+  "description": "AgentGuard: one question to the service before each tool call that runs, writes or fetches.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|NotebookEdit|WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/cyberbrain\" guard",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

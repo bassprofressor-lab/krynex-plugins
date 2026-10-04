@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "krynex-plugins",
   "metadata": {
-    "description": "Plugins von Krynex Labs: Cyberbrain, ein lokales, zitierendes Projekt-Gedächtnis für Coding-Agenten."
+    "description": "Plugins von Krynex Labs: Cyberbrain (lokales, zitierendes Projekt-Gedächtnis) und AgentGuard (Freigabe vor jedem Werkzeugaufruf eines Agenten)."
   },
   "owner": {
     "name": "Krynex Labs",
@@ -16,7 +16,28 @@
       "source": "./plugins/cyberbrain",
       "category": "productivity",
       "homepage": "https://www.krynexlabs.de/cyberbrain/",
-      "tags": ["memory", "context", "local-first", "gdpr", "mcp"]
+      "tags": [
+        "memory",
+        "context",
+        "local-first",
+        "gdpr",
+        "mcp"
+      ]
+    },
+    {
+      "name": "agentguard",
+      "description": "Asks your AgentGuard service before each shell command, file write and web fetch: shadow mode records, enforce mode carries out deny and ask and fails safe.",
+      "version": "0.1.0",
+      "source": "./plugins/agentguard",
+      "category": "security",
+      "homepage": "https://www.krynexlabs.de/services/agentguard/",
+      "tags": [
+        "governance",
+        "approval",
+        "audit",
+        "ai-act",
+        "security"
+      ]
     }
   ]
 }

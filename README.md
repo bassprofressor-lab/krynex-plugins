@@ -3,7 +3,10 @@
 ```
 /plugin marketplace add bassprofressor-lab/krynex-plugins
 /plugin install cyberbrain@krynex-plugins
+/plugin install agentguard@krynex-plugins
 ```
+
+Two plugins, independent of each other: install one or both.
 
 ## cyberbrain
 
@@ -37,9 +40,30 @@ If you set Cyberbrain up earlier with `cyberbrain install`, run it again after i
 plugin: it notices the plugin and takes its own hook entries out of `.claude/settings.json`,
 so no event runs twice.
 
+## agentguard
+
+Asks your AgentGuard service before every shell command, file write and web fetch the agent
+makes, and does what it answers. AgentGuard is a separate service (self-hosted, or run for you by
+Krynex Labs inside your network); the plugin is the client in Claude Code.
+
+When you enable it, Claude Code asks for the service address, the agent key (kept in your
+system's secure credential store), the tenant, the agent id, and the mode:
+
+- **shadow** (default): every call is recorded with what AgentGuard would have decided; nothing
+  is stopped. The safe way to start.
+- **enforce**: deny and ask are carried out. If the service cannot answer, reads still go ahead
+  and everything else asks a person. If the guard itself cannot start, it asks a person too.
+
+The address must be on your machine or in your private network: tool calls carry commands and
+file contents, and there is no switch to send them to a public address.
+
+It runs the same Cyberbrain binary as `cyberbrain guard`, downloaded and checked the same way
+(see above); it needs no memory store. If you use both plugins and your Cyberbrain store also
+has a `[governance]` address, the call is checked twice; use one of the two.
+
 ## Licences
 
-The plugin (manifests, skills, hooks, starter) is Apache-2.0. The Cyberbrain binary it
+The plugins (manifests, skills, hooks, starters) are Apache-2.0. The Cyberbrain binary it
 downloads is [FSL-1.1-ALv2](https://github.com/bassprofressor-lab/cyberbrain/blob/main/LICENSE.md):
 free to use, including commercially, except to offer a competing product; each release
 becomes Apache-2.0 two years after it ships.

@@ -10,5 +10,17 @@
   "homepage": "https://www.krynexlabs.de/cyberbrain/",
   "repository": "https://github.com/bassprofressor-lab/krynex-plugins",
   "license": "Apache-2.0",
-  "keywords": ["memory", "context", "local-first", "gdpr", "audit", "mcp"]
+  "keywords": [
+    "memory",
+    "context",
+    "local-first",
+    "gdpr",
+    "audit",
+    "mcp"
+  ],
+  "icon": "./logo.png",
+  "documentationUrl": "https://www.krynexlabs.de/cyberbrain/",
+  "supportUrl": "https://www.krynexlabs.de/kontakt/",
+  "privacyPolicyUrl": "https://www.krynexlabs.de/datenschutz/",
+  "termsOfServiceUrl": "https://www.krynexlabs.de/agb/"
 }

@@ -1,0 +1,63 @@
+{
+  "name": "agentguard",
+  "displayName": "AgentGuard",
+  "description": "Asks your AgentGuard service before every shell command, file write and web fetch of the agent. Shadow mode records and never stops anything; enforce mode carries out deny and ask, and asks a person whenever the service cannot answer.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Krynex Labs",
+    "email": "info@krynexlabs.de"
+  },
+  "homepage": "https://www.krynexlabs.de/services/agentguard/",
+  "repository": "https://github.com/bassprofressor-lab/krynex-plugins",
+  "license": "Apache-2.0",
+  "keywords": [
+    "governance",
+    "approval",
+    "audit",
+    "ai-act",
+    "agents",
+    "security"
+  ],
+  "userConfig": {
+    "url": {
+      "type": "string",
+      "title": "AgentGuard address",
+      "description": "Base URL of your AgentGuard service, for example http://127.0.0.1:18095. Loopback or private network only: tool calls carry commands and file contents.",
+      "required": true
+    },
+    "key": {
+      "type": "string",
+      "title": "AgentGuard key",
+      "description": "The agent key from the AgentGuard console (agk_…). Stored in the system's secure credential store.",
+      "sensitive": true,
+      "required": true
+    },
+    "mode": {
+      "type": "string",
+      "title": "Mode",
+      "description": "shadow: record only, nothing is stopped. enforce: deny and ask are carried out.",
+      "options": [
+        "shadow",
+        "enforce"
+      ],
+      "default": "shadow"
+    },
+    "tenant": {
+      "type": "string",
+      "title": "Tenant",
+      "description": "Your tenant id in AgentGuard.",
+      "required": true
+    },
+    "agent_id": {
+      "type": "string",
+      "title": "Agent id",
+      "description": "The agent the key is bound to.",
+      "default": "claude-code"
+    }
+  },
+  "icon": "./logo.png",
+  "documentationUrl": "https://www.krynexlabs.de/services/agentguard/",
+  "supportUrl": "https://www.krynexlabs.de/kontakt/",
+  "privacyPolicyUrl": "https://www.krynexlabs.de/datenschutz/",
+  "termsOfServiceUrl": "https://www.krynexlabs.de/agb/"
+}
