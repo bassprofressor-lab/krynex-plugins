@@ -6,13 +6,30 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 22
-      - run: npm install -g @anthropic-ai/claude-code
+      - run: npm install -g @anthropic-ai/claude-code@2.1.289
       # --strict: warnings fail too. The directory submission requires a clean strict run.
       - run: claude plugin validate --strict .
       - run: claude plugin validate --strict plugins/cyberbrain
       - name: the starter is valid bash
         run: bash -n plugins/cyberbrain/bin/cyberbrain
+      - run: claude plugin validate --strict plugins/agentguard
+      - name: the agentguard starter is valid bash
+        run: bash -n plugins/agentguard/scripts/cyberbrain
+      # The starters check downloads against SHA256SUMS in the plugin, not against the release's
+      # own file (a replaced release would bring a matching one). This step keeps the pinned file
+      # honest: every listed asset of the release in VERSION must hash to exactly that value.
+      - name: pinned checksums match the release in VERSION
+        run: |
+          for p in cyberbrain agentguard; do
+            v=$(tr -d ' \r\n' < plugins/$p/VERSION)
+            while read -r want name; do
+              curl -fsSL -o "/tmp/$name" "https://github.com/bassprofressor-lab/cyberbrain/releases/download/v$v/$name"
+              got=$(sha256sum "/tmp/$name" | awk '{print $1}')
+              [ "$got" = "$want" ] || { echo "$p: $name v$v hashes to $got, plugin pins $want"; exit 1; }
+              echo "$p: $name v$v ok"
+            done < plugins/$p/SHA256SUMS
+          done

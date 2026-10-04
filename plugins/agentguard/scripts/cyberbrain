@@ -4,8 +4,13 @@
 #
 # Claude Code legt dieses Verzeichnis (bin/) auf den PATH und ruft es aus den Hooks und dem
 # MCP-Eintrag auf. Beim ersten Aufruf lädt es genau das Release, das in VERSION steht, prüft
-# es gegen die SHA256SUMS desselben Releases und legt es in ${CLAUDE_PLUGIN_DATA} ab, das
-# Plugin-Updates übersteht. Danach wird nur noch ausgeführt, nichts mehr geladen.
+# es gegen die Prüfsummen in SHA256SUMS NEBEN VERSION in diesem Plugin und legt es in
+# ${CLAUDE_PLUGIN_DATA} ab, das Plugin-Updates übersteht. Danach wird nur noch ausgeführt.
+#
+# Warum die Prüfsummen im Plugin stehen und nicht aus dem Release kommen (04.10.2026): Wer ein
+# Release ersetzen kann, ersetzt Programm und Prüfsummendatei zugleich, und eine Prüfung gegen
+# die mitgelieferte Datei meldet dann „passt“. So muss ein Angreifer zusätzlich dieses Repository
+# ändern, und jede Änderung daran ist ein sichtbarer Commit.
 #
 # Was es absichtlich NICHT tut:
 #  - kein „latest“: ein Plugin-Update ändert VERSION, sonst nichts lädt sich still neu
@@ -64,15 +69,13 @@ if [ ! -x "$bin" ]; then
   mkdir -p "$dir" || fail "cannot create $dir" "${2:-}"
   base="https://github.com/$repo/releases/download/v$version"
   tmp="$(mktemp "$dir/.dl.XXXXXX")" || fail "cannot write to $dir" "${2:-}"
-  sums="$(mktemp "$dir/.sums.XXXXXX")" || fail "cannot write to $dir" "${2:-}"
-  trap 'rm -f "$tmp" "$sums"' EXIT
-  curl -fsSL --retry 2 --max-time 120 -o "$sums" "$base/SHA256SUMS" \
-    || fail "could not download SHA256SUMS for v$version (offline?)" "${2:-}"
+  sums="$here/../SHA256SUMS"
+  trap 'rm -f "$tmp"' EXIT
   curl -fsSL --retry 2 --max-time 300 -o "$tmp" "$base/$asset" \
     || fail "could not download $asset v$version (offline, or no build for this platform yet)" "${2:-}"
   # Zeilen sehen so aus: "<hash>  name" oder "<hash> *name" (Windows, Binärmodus).
   want="$(awk -v n="$asset" '{f=$2; sub(/^\*/,"",f); if (f==n) print $1}' "$sums")"
-  [ -n "$want" ] || fail "$asset is not listed in SHA256SUMS of v$version" "${2:-}"
+  [ -n "$want" ] || fail "$asset is not listed in the plugin's SHA256SUMS for v$version" "${2:-}"
   if command -v sha256sum >/dev/null 2>&1; then got="$(sha256sum "$tmp" | awk '{print $1}')"
   else got="$(shasum -a 256 "$tmp" | awk '{print $1}')"; fi
   if [ "$got" != "$want" ]; then
@@ -81,7 +84,6 @@ if [ ! -x "$bin" ]; then
   fi
   chmod +x "$tmp"
   mv -f "$tmp" "$bin" || fail "cannot place the binary in $dir" "${2:-}"
-  rm -f "$sums"
   trap - EXIT
 fi
 

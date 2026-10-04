@@ -29,9 +29,13 @@ so at session start and do nothing else.
 `bin/cyberbrain` is a starter. On first use it downloads the release pinned in
 [`plugins/cyberbrain/VERSION`](plugins/cyberbrain/VERSION) from
 [github.com/bassprofressor-lab/cyberbrain](https://github.com/bassprofressor-lab/cyberbrain/releases),
-checks it against that release's `SHA256SUMS`, and keeps it in Claude Code's plugin data
-directory. A checksum that does not match means nothing is run. It never fetches "latest":
-a new binary comes with a plugin update that changes `VERSION`, nothing else.
+checks it against [`plugins/cyberbrain/SHA256SUMS`](plugins/cyberbrain/SHA256SUMS) in this
+repository, and keeps it in Claude Code's plugin data directory. A checksum that does not match
+means nothing is run. The checksums live here and not in the release on purpose: whoever could
+replace a release could replace its checksum file with it, so tampering would also need a
+visible commit to this repository. CI checks that the pinned values match the release. It never
+fetches "latest": a new binary comes with a plugin update that changes `VERSION` and
+`SHA256SUMS`, nothing else.
 
 Builds: Linux x86_64, Windows x86_64 (Git Bash, which Claude Code on Windows uses), macOS on
 Apple silicon. Set `CYBERBRAIN_BIN=/path/to/cyberbrain` to use your own build.

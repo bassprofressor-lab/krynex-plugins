@@ -2,7 +2,7 @@
   "name": "cyberbrain",
   "displayName": "Cyberbrain",
   "description": "Local, cited project memory for coding agents. Rings 0 and 1 are injected at every session start, recall searches the rest with a citation on every hit, and nothing leaves the machine.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Krynex Labs",
     "email": "info@krynexlabs.de"

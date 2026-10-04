@@ -12,7 +12,7 @@
     {
       "name": "cyberbrain",
       "description": "Local, cited project memory for coding agents: notes as Markdown, trust rings, hybrid search without network, GDPR erasure and an audit chain.",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "source": "./plugins/cyberbrain",
       "category": "productivity",
       "homepage": "https://www.krynexlabs.de/cyberbrain/",
@@ -27,7 +27,7 @@
     {
       "name": "agentguard",
       "description": "Client for AgentGuard, the commercial governance service by Krynex Labs. Requires an AgentGuard instance and key.",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "source": "./plugins/agentguard",
       "category": "security",
       "homepage": "https://www.krynexlabs.de/services/agentguard/",
