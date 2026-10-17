@@ -60,6 +60,8 @@ system's secure credential store), the tenant, the agent id, and the mode:
 - **enforce**: deny and ask are carried out. If the service cannot answer, reads still go ahead
   and everything else asks a person. If the guard itself cannot start, it asks a person too.
 
+The hook sets `"onFailure": "block"` (Claude Code v2.1.295 or later), so a guard that times out or crashes blocks the tool call instead of letting it through; in shadow mode the starter itself still exits 0 without blocking on its own errors, so only a real timeout or crash can stop a call there.
+
 The address must be on your machine or in your private network: tool calls carry commands and
 file contents, and there is no switch to send them to a public address.
 

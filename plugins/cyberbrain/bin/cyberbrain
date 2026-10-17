@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Cyberbrain-Starter für das Claude-Code-Plugin (04.10.2026).
 #
-# Claude Code legt dieses Verzeichnis (bin/) auf den PATH und ruft es aus den Hooks und dem
-# MCP-Eintrag auf. Beim ersten Aufruf lädt es genau das Release, das in VERSION steht, prüft
+# Die Hooks und der MCP-Eintrag rufen es über ${CLAUDE_PLUGIN_ROOT}/bin/cyberbrain auf; als
+# bin/ liegt es zusätzlich auf dem PATH des Bash-Werkzeugs. Beim ersten Aufruf lädt es genau das Release, das in VERSION steht, prüft
 # es gegen die Prüfsummen in SHA256SUMS NEBEN VERSION in diesem Plugin und legt es in
 # ${CLAUDE_PLUGIN_DATA} ab, das Plugin-Updates übersteht. Danach wird nur noch ausgeführt.
 #
