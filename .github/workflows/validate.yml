@@ -10,12 +10,14 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 22
-      - run: npm install -g @anthropic-ai/claude-code@2.1.302
+      - run: npm install -g @anthropic-ai/claude-code@2.1.309
       # --strict: warnings fail too. The directory submission requires a clean strict run.
       - run: claude plugin validate --strict .
       - run: claude plugin validate --strict plugins/cyberbrain
       - name: the starter is valid bash
         run: bash -n plugins/cyberbrain/bin/cyberbrain
+      # The mod (hooks/register.js): compaction notice and /recall, with stubs, no session.
+      - run: claude plugin test plugins/cyberbrain
       - run: claude plugin validate --strict plugins/agentguard
       - name: the agentguard starter is valid bash
         run: bash -n plugins/agentguard/scripts/cyberbrain

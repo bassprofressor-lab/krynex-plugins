@@ -32,7 +32,7 @@ fail() {
   # stdout und enden mit 0. Sonst: Fehler auf stderr, Code 1.
   if [ "$is_hook" = 1 ]; then
     echo "cyberbrain plugin: $1" >&2
-    if [ "${2:-}" = "session-start" ]; then
+    if [ "${2:-}" = "session-start" ] || [ "${2:-}" = "session-rings" ]; then
       msg=$(printf '%s' "cyberbrain plugin: $1" | sed 's/\\/\\\\/g; s/"/\\"/g')
       printf '{"systemMessage":"%s"}\n' "$msg"
     fi
