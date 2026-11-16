@@ -29,6 +29,7 @@ jobs:
           for p in cyberbrain agentguard; do
             v=$(tr -d ' \r\n' < plugins/$p/VERSION)
             while read -r want name; do
+              name="${name#\*}"   # sha256sum -b marks binary files with a leading *
               curl -fsSL -o "/tmp/$name" "https://github.com/bassprofressor-lab/cyberbrain/releases/download/v$v/$name"
               got=$(sha256sum "/tmp/$name" | awk '{print $1}')
               [ "$got" = "$want" ] || { echo "$p: $name v$v hashes to $got, plugin pins $want"; exit 1; }
